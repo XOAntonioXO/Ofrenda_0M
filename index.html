@@ -61,7 +61,7 @@
     import ESC0010 from "./props/flomarco.js"
     import ESC00011 from "./props/mike.js"
 
-//🕹️🕹️ Renderer - Configurado a máxima nitidez y calidad para móviles
+//🕹️🕹️ Renderer - Realiza una conexión entre el código y el canvas
 const canvas = document.getElementById('myCanvas');
 
 const esMovil = window.matchMedia(
@@ -70,31 +70,32 @@ const esMovil = window.matchMedia(
 
 const renderer = new THREE.WebGLRenderer({
     canvas: canvas,
-    antialias: true, // Suavizado de bordes activado para eliminar dientes de sierra
+    antialias: !esMovil,
     powerPreference: 'high-performance'
 });
 
-// Forzamos la máxima resolución y densidad de pixeles de la pantalla del celular
-renderer.setPixelRatio(Math.max(window.devicePixelRatio || 1, 2));
+renderer.setPixelRatio(
+    Math.min(window.devicePixelRatio || 1, esMovil ? 1 : 1.5)
+);
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(0x69106B);
 
+// Desactivar sombras en móviles para mejor rendimiento
 renderer.shadowMap.enabled = !esMovil;
 if (renderer.shadowMap.enabled) {
     renderer.shadowMap.type = THREE.PCFShadowMap;
 }
 
 document.body.style.margin = '0';
-document.body.style.overflow = 'hidden';
 canvas.style.display = 'block';
-canvas.style.width = '100vw';
-canvas.style.height = '100vh';
+canvas.style.width = '100%';
+canvas.style.height = '100dvh';
 
-// 🎬 Creando nueva escena
+// 🎬 Creando nueva escena - Es el espacio donde se colocan los objetos
 var scene = new THREE.Scene();
 
-// 💡 LUZ AMBIENTAL DE SEGURIDAD
+// 💡 LUZ AMBIENTAL DE SEGURIDAD (Evita que el celular ponga todo en negro si saturas las luces puntuales)
 var luzAmbiental = new THREE.AmbientLight(0xffffff, 0.4);
 scene.add(luzAmbiental);
 
