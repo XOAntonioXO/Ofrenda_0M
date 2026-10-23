@@ -19,13 +19,12 @@
             "three": "./js/three.module.js",
             "three/OrbitControls": "./js/OrbitControls.js" 
         }
-}
+    }
 </script>
 <script type="module"> 
 //🗃️🗃️ Mandar llamar a la librería
     import * as THREE from 'three'; 
     import {OrbitControls} from 'three/OrbitControls';
-    console.log(OrbitControls);
     import {RoundedBoxGeometry} from "./js/RoundedBoxGeometry.js"
 
     import ESC01 from "./props/cuadro.js"
@@ -63,7 +62,7 @@
     import ESC00011 from "./props/mike.js"
 
 //🕹️🕹️ Renderer - Realiza una conexión entre el código y el canvas
- const canvas = document.getElementById('myCanvas');
+const canvas = document.getElementById('myCanvas');
 
 const esMovil = window.matchMedia(
     '(max-width: 768px), (pointer: coarse)'
@@ -72,7 +71,7 @@ const esMovil = window.matchMedia(
 const renderer = new THREE.WebGLRenderer({
     canvas: canvas,
     antialias: !esMovil,
-    powerPreference: 'low-power'
+    powerPreference: 'high-performance'
 });
 
 renderer.setPixelRatio(
@@ -82,8 +81,11 @@ renderer.setPixelRatio(
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(0x69106B);
 
-// Desactivar sombras en móviles
+// Desactivar sombras en móviles para mejor rendimiento
 renderer.shadowMap.enabled = !esMovil;
+if (renderer.shadowMap.enabled) {
+    renderer.shadowMap.type = THREE.PCFShadowMap;
+}
 
 document.body.style.margin = '0';
 canvas.style.display = 'block';
@@ -91,22 +93,23 @@ canvas.style.width = '100%';
 canvas.style.height = '100dvh';
 
 // 🎬 Creando nueva escena - Es el espacio donde se colocan los objetos
-    var scene = new THREE.Scene();
+var scene = new THREE.Scene();
+
+// 💡 LUZ AMBIENTAL DE SEGURIDAD (Evita que el celular ponga todo en negro si saturas las luces puntuales)
 
 //🎥🎥 Agregar una cámara de perspectiva
-     var camera = new THREE.PerspectiveCamera(70,window.innerWidth / window.innerHeight,0.1,2000
-    );
-    scene.add(camera);
+var camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 2000);
+scene.add(camera);
 
-    //Settings de la cámara
-    camera.position.set(17, 2, 0);
+//Settings de la cámara
+camera.position.set(17, 2, 0);
 
-    // Añadiendo los OrbitControls
-    var controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    
-    window.addEventListener('resize', () => {
+// Añadiendo los OrbitControls
+var controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.05;
+
+window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 
@@ -114,56 +117,39 @@ canvas.style.height = '100dvh';
         window.innerWidth,
         window.innerHeight
     );
-
-    renderer.setPixelRatio(
-        Math.min(
-            window.devicePixelRatio || 1,
-            esMovil ? 1 : 1.5
-        )
-    );
 });
- // ✍️ GridHelper
 
+// ✍️ Fondo
 var obj = new THREE.TextureLoader();
 var bgtexture = obj.load('img/fondo.jpg');
 scene.background = bgtexture;
 
 // Espacio para colocar los objetos
 
-///  💫💢🐭🐭 LUCES
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFShadowMap;
-//luces velas
-
+///  💫💢🐭🐭 LUCES (Todas tus luces originales exactas)
 var luzVela1 = new THREE.PointLight(0xffaa33, 2, 7, 2); 
 luzVela1.position.set(2.2, 3.65, -6.8);
 scene.add(luzVela1);
-
 
 var luzVela2 = new THREE.PointLight(0xffaa33, 2, 5, 2); 
 luzVela2.position.set(2.2, 3.65, 6.8); 
 scene.add(luzVela2);
 
-
 var luzVela3 = new THREE.PointLight(0xffaa33, 2, 5, 2); 
 luzVela3.position.set(5.62, 2.75, 3.52); 
 scene.add(luzVela3);
-
 
 var luzVela4 = new THREE.PointLight(0xffaa33, 2, 5, 2); 
 luzVela4.position.set(5.62, 2.75, -3.52); 
 scene.add(luzVela4);
 
-
 var luzVela5= new THREE.PointLight(0xffaa33, 2, 5, 2); 
 luzVela5.position.set(-1, 4.8, -6.9); 
 scene.add(luzVela5);
 
-
 var luzVela6= new THREE.PointLight(0xffaa33, 2, 5, 2); 
 luzVela6.position.set(4, 3.155, -0.5); 
 scene.add(luzVela6);
-
 
 var luzVela7= new THREE.PointLight(0xffaa33, 2, 5, 2); 
 luzVela7.position.set(4, 3.155, 0.5); 
@@ -173,26 +159,21 @@ var luzVela8= new THREE.PointLight(0xffaa33, 2, 5, 2);
 luzVela8.position.set(-3.3, 6.05, 0.7); 
 scene.add(luzVela8);
 
-
 var luzVela9= new THREE.PointLight(0xffaa33, 2, 5, 2); 
 luzVela9.position.set(-3.3, 6.05, -0.7); 
 scene.add(luzVela9);
-
 
 var luzVela10= new THREE.PointLight(0xffaa33, 2, 5, 2); 
 luzVela10.position.set(1, 4.35, -1.5); 
 scene.add(luzVela10);
 
-
 var luzVela11= new THREE.PointLight(0xffaa33, 2, 5, 2); 
 luzVela11.position.set(1, 4.35, 1.5); 
 scene.add(luzVela11);
 
-
 var luzVela12= new THREE.PointLight(0xffaa33, 2, 5, 2); 
 luzVela12.position.set(-1, 4.8, 6.9); 
 scene.add(luzVela12);
-
 
 //
 var luzVela13 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
@@ -203,46 +184,37 @@ var luzVela14 = new THREE.PointLight(0xffaa33, 2, 2, 1);
 luzVela14.position.set(7.5, 0.55, 2.2); 
 scene.add(luzVela14);
 
-
 var luzVela15 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
 luzVela15.position.set(8.2, 0.55, 2.2); 
 scene.add(luzVela15);
-
 
 var luzVela16 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
 luzVela16.position.set(8.9, 0.55, 2.2); 
 scene.add(luzVela16);
 
-
 var luzVela17 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
 luzVela17.position.set(9.6, 0.55, 2.2); 
 scene.add(luzVela17);
-
 
 var luzVela18 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
 luzVela18.position.set(10.3, 0.55, 2.2); 
 scene.add(luzVela18);
 
-
 var luzVela19 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
 luzVela19.position.set(11.0, 0.55, 2.2); 
 scene.add(luzVela19);
-
 
 var luzVela20 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
 luzVela20.position.set(11.7, 0.55, 2.2); 
 scene.add(luzVela20);
 
-
 var luzVela21 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
 luzVela21.position.set(12.4, 0.55, 2.2); 
 scene.add(luzVela21);
 
-
 var luzVela22 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
 luzVela22.position.set(13.1, 0.55, 2.2); 
 scene.add(luzVela22);
-
 
 var luzVela23 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
 luzVela23.position.set(13.8, 0.55, 2.2); 
@@ -252,52 +224,42 @@ var luzVela24 = new THREE.PointLight(0xffaa33, 2, 2, 1);
 luzVela24.position.set(14.5, 0.55, 2.2); 
 scene.add(luzVela24);
 
-
 var luzVela25 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
 luzVela25.position.set(15.2, 0.55, 2.2); 
 scene.add(luzVela25);
 
-
 var luzVela26 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
 luzVela26.position.set(15.9, 0.55, 2.2); 
 scene.add(luzVela26);
-
 
 //
 var luzVela27 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
 luzVela27.position.set(6.8, 0.55, -2.2); 
 scene.add(luzVela27);
 
-
 var luzVela28 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
 luzVela28.position.set(7.5, 0.55, -2.2); 
 scene.add(luzVela28);
-
 
 var luzVela29 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
 luzVela29.position.set(8.2, 0.55, -2.2); 
 scene.add(luzVela29);
 
-
 var luzVela30 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
 luzVela30.position.set(8.9, 0.55, -2.2); 
 scene.add(luzVela30);
-
 
 var luzVela31 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
 luzVela31.position.set(9.6, 0.55, -2.2); 
 scene.add(luzVela31);
 
-
 var luzVela32 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
 luzVela32.position.set(10.3, 0.55, -2.2); 
 scene.add(luzVela32);
 
-
 var luzVela33 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
 luzVela33.position.set(11.0, 0.55, -2.2); 
 scene.add(luzVela33);
-
 
 var luzVela34 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
 luzVela34.position.set(11.7, 0.55, -2.2); 
@@ -307,57 +269,46 @@ var luzVela35 = new THREE.PointLight(0xffaa33, 1, 2, 1);
 luzVela35.position.set(12.4, 0.55, -2.2); 
 scene.add(luzVela35);
 
-
 var luzVela36 = new THREE.PointLight(0xffaa33, 1, 2, 1); 
 luzVela36.position.set(13.1, 0.55, -2.2); 
 scene.add(luzVela36);
-
 
 var luzVela37 = new THREE.PointLight(0xffaa33, 1, 2, 1); 
 luzVela37.position.set(13.8, 0.55, -2.2); 
 scene.add(luzVela37);
 
-
 var luzVela38 = new THREE.PointLight(0xffaa33, 1, 2, 1); 
 luzVela38.position.set(14.5, 0.55, -2.2); 
 scene.add(luzVela38);
-
 
 var luzVela39 = new THREE.PointLight(0xffaa33, 1, 2, 1); 
 luzVela39.position.set(15.2, 0.55, -2.2); 
 scene.add(luzVela39);
 
-
 var luzVela40 = new THREE.PointLight(0xffaa33, 1, 2, 1); 
 luzVela40.position.set(15.9, 0.55, -2.2); 
 scene.add(luzVela40);
-
 
 //
 var luzVela41= new THREE.PointLight(0xffaa33, 2, 5, 2); 
 luzVela41.position.set(-2.15,4.36,-2.5); 
 scene.add(luzVela41);
 
-
 var luzVela42= new THREE.PointLight(0xffaa33, 2, 5, 2); 
 luzVela42.position.set(-2.15,4.36,2.5); 
 scene.add(luzVela42);
-
 
 var luzVela43= new THREE.PointLight(0xffaa33, 2, 10, 2); 
 luzVela43.position.set(9.6,0.5,-8.55); 
 scene.add(luzVela43);
 
-
 var luzVela44= new THREE.PointLight(0xffaa33, 2, 10, 2); 
 luzVela44.position.set(9.6,0.5,8.55); 
 scene.add(luzVela44);
 
-
 var luzVela45= new THREE.PointLight(0xffaa33, 2, 10, 2); 
 luzVela45.position.set(-9.6,0.5,8.55); 
 scene.add(luzVela45);
-
 
 var luzVela46= new THREE.PointLight(0xffaa33, 2, 10, 2); 
 luzVela46.position.set(-9.6,0.5,-8.55); 
@@ -367,41 +318,33 @@ var luzVela47= new THREE.PointLight(0xffaa33, 2, 10, 2);
 luzVela47.position.set(0,0.5,-8.55); 
 scene.add(luzVela47);
 
-
 var luzVela48= new THREE.PointLight(0xffaa33, 2, 10, 2); 
 luzVela48.position.set(0,0.5,8.55); 
 scene.add(luzVela48);
-
 
 var luzVela49= new THREE.PointLight(0xffaa33, 2, 10, 2); 
 luzVela49.position.set(-4.4,6.4,4.35); 
 scene.add(luzVela49);
 
-
 var luzVela50= new THREE.PointLight(0xffaa33, 2, 10, 2); 
 luzVela50.position.set(-4.4,6.4,-4.35); 
 scene.add(luzVela50);
-
 
 var luzVela51= new THREE.PointLight(0xffaa33, 2, 10, 2); 
 luzVela51.position.set(-9.6,0.5,0); 
 scene.add(luzVela51);
 
-
 var luzVela52= new THREE.PointLight(0xffaa33, 2, 10, 2); 
 luzVela52.position.set(-6.1,11.1,3.25); 
 scene.add(luzVela52);
-
 
 var luzVela53= new THREE.PointLight(0xffaa33, 2, 10, 2); 
 luzVela53.position.set(-6.1,11.1,-3.25); 
 scene.add(luzVela53);
 
-
 var luzVela54= new THREE.PointLight(0xffaa33, 2, 7, 2); 
 luzVela54.position.set(9,2,0); 
 scene.add(luzVela54);
-
 
 //ilumniar pasillo de velas
 var punto_luzsuelo = new THREE.SpotLight(0xffaa33,1,10,0.38,0.5,0);
@@ -409,14 +352,14 @@ punto_luzsuelo.target.position.set(8,0,0);
 punto_luzsuelo.position.set(8, 10, 0);
 scene.add(punto_luzsuelo.target);
 scene.add(punto_luzsuelo);
-punto_luzsuelo.castShadow = true;
+if(!esMovil) punto_luzsuelo.castShadow = true;
 
 var punto_luzsuelo2 = new THREE.SpotLight(0xffaa33,1,10,0.38,0.5,0);
 punto_luzsuelo2.target.position.set(14,0,0);
 punto_luzsuelo2.position.set(14, 10, 0);
 scene.add(punto_luzsuelo2.target);
 scene.add(punto_luzsuelo2);
-punto_luzsuelo2.castShadow = true;
+if(!esMovil) punto_luzsuelo2.castShadow = true;
 
 //OBJETOS  ✏️✏️✏️✏️  🪶
 var piso = new THREE.Mesh(
@@ -425,7 +368,7 @@ var piso = new THREE.Mesh(
 );
 scene.add(piso);
 piso.rotation.x = -Math.PI / 2;
-piso.receiveShadow = true;
+if(!esMovil) piso.receiveShadow = true;
 
 //base
 const Base = ESC0001({x:0,y:-2.2,z:0});
@@ -725,7 +668,7 @@ const Flor5 = ESC0006({x:0.9,y:2.87,z:-5});
 scene.add(Flor5);
 
 const Flor6 = ESC0007({x:2,y:2.87,z:-6});
-Flor4.scale.set(0.015, 0.015, 0.015);
+Flor6.scale.set(0.015, 0.015, 0.015);
 scene.add(Flor6);
 
 const Flor7 = ESC0006({x:0.9,y:2.87,z:5});
@@ -1286,7 +1229,7 @@ mike2.rotation.set(0,Math.PI / 2, 0);
 scene.add(mike2);
 
 //🎰🎰Rendering y animación
-    let ultimoFrame = 0;
+let ultimoFrame = 0;
 const intervalo = esMovil ? 1000 / 30 : 1000 / 60;
 
 function render(tiempo) {
