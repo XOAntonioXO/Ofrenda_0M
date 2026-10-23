@@ -95,10 +95,6 @@ canvas.style.height = '100dvh';
 // 🎬 Creando nueva escena - Es el espacio donde se colocan los objetos
 var scene = new THREE.Scene();
 
-// 💡 LUZ AMBIENTAL DE SEGURIDAD (Evita que el celular ponga todo en negro si saturas las luces puntuales)
-var luzAmbiental = new THREE.AmbientLight(0xffffff, 0.4);
-scene.add(luzAmbiental);
-
 //🎥🎥 Agregar una cámara de perspectiva
 var camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 2000);
 scene.add(camera);
