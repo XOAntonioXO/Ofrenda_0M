@@ -70,18 +70,17 @@ const esMovil = window.matchMedia(
 
 const renderer = new THREE.WebGLRenderer({
     canvas: canvas,
-    antialias: !esMovil,
+    antialias: true, // <-- Activado para quitar dientes de sierra en móviles
     powerPreference: 'high-performance'
 });
 
 renderer.setPixelRatio(
-    Math.min(window.devicePixelRatio || 1, esMovil ? 1 : 1.5)
+    Math.min(window.devicePixelRatio || 1, 2) // <-- Permite aprovechar la resolución completa de la pantalla del celular
 );
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(0x69106B);
 
-// Desactivar sombras en móviles para mejor rendimiento
 renderer.shadowMap.enabled = !esMovil;
 if (renderer.shadowMap.enabled) {
     renderer.shadowMap.type = THREE.PCFShadowMap;
@@ -92,19 +91,14 @@ canvas.style.display = 'block';
 canvas.style.width = '100%';
 canvas.style.height = '100dvh';
 
-// 🎬 Creando nueva escena - Es el espacio donde se colocan los objetos
+// 🎬 Creando nueva escena
 var scene = new THREE.Scene();
 
-// 💡 LUZ AMBIENTAL DE SEGURIDAD (Evita que el celular ponga todo en negro si saturas las luces puntuales)
-
-//🎥🎥 Agregar una cámara de perspectiva
 var camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 2000);
 scene.add(camera);
 
-//Settings de la cámara
 camera.position.set(17, 2, 0);
 
-// Añadiendo los OrbitControls
 var controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
@@ -112,241 +106,53 @@ controls.dampingFactor = 0.05;
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-
-    renderer.setSize(
-        window.innerWidth,
-        window.innerHeight
-    );
+    renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// ✍️ Fondo
 var obj = new THREE.TextureLoader();
 var bgtexture = obj.load('img/fondo.jpg');
 scene.background = bgtexture;
 
-// Espacio para colocar los objetos
+// --- TODAS TUS LUCES ORIGINALES ---
+var luzVela1 = new THREE.PointLight(0xffaa33, 2, 7, 2); luzVela1.position.set(2.2, 3.65, -6.8); scene.add(luzVela1);
+var luzVela2 = new THREE.PointLight(0xffaa33, 2, 5, 2); luzVela2.position.set(2.2, 3.65, 6.8); scene.add(luzVela2);
+var luzVela3 = new THREE.PointLight(0xffaa33, 2, 5, 2); luzVela3.position.set(5.62, 2.75, 3.52); scene.add(luzVela3);
+var luzVela4 = new THREE.PointLight(0xffaa33, 2, 5, 2); luzVela4.position.set(5.62, 2.75, -3.52); scene.add(luzVela4);
+var luzVela5= new THREE.PointLight(0xffaa33, 2, 5, 2); luzVela5.position.set(-1, 4.8, -6.9); scene.add(luzVela5);
+var luzVela6= new THREE.PointLight(0xffaa33, 2, 5, 2); luzVela6.position.set(4, 3.155, -0.5); scene.add(luzVela6);
+var luzVela7= new THREE.PointLight(0xffaa33, 2, 5, 2); luzVela7.position.set(4, 3.155, 0.5); scene.add(luzVela7);
+var luzVela8= new THREE.PointLight(0xffaa33, 2, 5, 2); luzVela8.position.set(-3.3, 6.05, 0.7); scene.add(luzVela8);
+var luzVela9= new THREE.PointLight(0xffaa33, 2, 5, 2); luzVela9.position.set(-3.3, 6.05, -0.7); scene.add(luzVela9);
+var luzVela10= new THREE.PointLight(0xffaa33, 2, 5, 2); luzVela10.position.set(1, 4.35, -1.5); scene.add(luzVela10);
+var luzVela11= new THREE.PointLight(0xffaa33, 2, 5, 2); luzVela11.position.set(1, 4.35, 1.5); scene.add(luzVela11);
+var luzVela12= new THREE.PointLight(0xffaa33, 2, 5, 2); luzVela12.position.set(-1, 4.8, 6.9); scene.add(luzVela12);
 
-///  💫💢🐭🐭 LUCES (Todas tus luces originales exactas)
-var luzVela1 = new THREE.PointLight(0xffaa33, 2, 7, 2); 
-luzVela1.position.set(2.2, 3.65, -6.8);
-scene.add(luzVela1);
+for(let i = 13; i <= 26; i++) {
+    let xPos = 6.8 + ((i - 13) * 0.7);
+    let p1 = new THREE.PointLight(0xffaa33, 2, 2, 1); p1.position.set(xPos, 0.55, 2.2); scene.add(p1);
+    let p2 = new THREE.PointLight(0xffaa33, 2, 2, 1); p2.position.set(xPos, 0.55, -2.2); scene.add(p2);
+}
+for(let i = 27; i <= 40; i++) {
+    let xPos = 6.8 + (((i - 27)) * 0.7);
+    let p1 = new THREE.PointLight(0xffaa33, 1, 2, 1); p1.position.set(xPos, 0.55, 2.2); scene.add(p1);
+    let p2 = new THREE.PointLight(0xffaa33, 1, 2, 1); p2.position.set(xPos, 0.55, -2.2); scene.add(p2);
+}
 
-var luzVela2 = new THREE.PointLight(0xffaa33, 2, 5, 2); 
-luzVela2.position.set(2.2, 3.65, 6.8); 
-scene.add(luzVela2);
+var luzVela41= new THREE.PointLight(0xffaa33, 2, 5, 2); luzVela41.position.set(-2.15,4.36,-2.5); scene.add(luzVela41);
+var luzVela42= new THREE.PointLight(0xffaa33, 2, 5, 2); luzVela42.position.set(-2.15,4.36,2.5); scene.add(luzVela42);
+var luzVela43= new THREE.PointLight(0xffaa33, 2, 10, 2); luzVela43.position.set(9.6,0.5,-8.55); scene.add(luzVela43);
+var luzVela44= new THREE.PointLight(0xffaa33, 2, 10, 2); luzVela44.position.set(9.6,0.5,8.55); scene.add(luzVela44);
+var luzVela45= new THREE.PointLight(0xffaa33, 2, 10, 2); luzVela45.position.set(-9.6,0.5,8.55); scene.add(luzVela45);
+var luzVela46= new THREE.PointLight(0xffaa33, 2, 10, 2); luzVela46.position.set(-9.6,0.5,-8.55); scene.add(luzVela46);
+var luzVela47= new THREE.PointLight(0xffaa33, 2, 10, 2); luzVela47.position.set(0,0.5,-8.55); scene.add(luzVela47);
+var luzVela48= new THREE.PointLight(0xffaa33, 2, 10, 2); luzVela48.position.set(0,0.5,8.55); scene.add(luzVela48);
+var luzVela49= new THREE.PointLight(0xffaa33, 2, 10, 2); luzVela49.position.set(-4.4,6.4,4.35); scene.add(luzVela49);
+var luzVela50= new THREE.PointLight(0xffaa33, 2, 10, 2); luzVela50.position.set(-4.4,6.4,-4.35); scene.add(luzVela50);
+var luzVela51= new THREE.PointLight(0xffaa33, 2, 10, 2); luzVela51.position.set(-9.6,0.5,0); scene.add(luzVela51);
+var luzVela52= new THREE.PointLight(0xffaa33, 2, 10, 2); luzVela52.position.set(-6.1,11.1,3.25); scene.add(luzVela52);
+var luzVela53= new THREE.PointLight(0xffaa33, 2, 10, 2); luzVela53.position.set(-6.1,11.1,-3.25); scene.add(luzVela53);
+var luzVela54= new THREE.PointLight(0xffaa33, 2, 7, 2); luzVela54.position.set(9,2,0); scene.add(luzVela54);
 
-var luzVela3 = new THREE.PointLight(0xffaa33, 2, 5, 2); 
-luzVela3.position.set(5.62, 2.75, 3.52); 
-scene.add(luzVela3);
-
-var luzVela4 = new THREE.PointLight(0xffaa33, 2, 5, 2); 
-luzVela4.position.set(5.62, 2.75, -3.52); 
-scene.add(luzVela4);
-
-var luzVela5= new THREE.PointLight(0xffaa33, 2, 5, 2); 
-luzVela5.position.set(-1, 4.8, -6.9); 
-scene.add(luzVela5);
-
-var luzVela6= new THREE.PointLight(0xffaa33, 2, 5, 2); 
-luzVela6.position.set(4, 3.155, -0.5); 
-scene.add(luzVela6);
-
-var luzVela7= new THREE.PointLight(0xffaa33, 2, 5, 2); 
-luzVela7.position.set(4, 3.155, 0.5); 
-scene.add(luzVela7);
-
-var luzVela8= new THREE.PointLight(0xffaa33, 2, 5, 2); 
-luzVela8.position.set(-3.3, 6.05, 0.7); 
-scene.add(luzVela8);
-
-var luzVela9= new THREE.PointLight(0xffaa33, 2, 5, 2); 
-luzVela9.position.set(-3.3, 6.05, -0.7); 
-scene.add(luzVela9);
-
-var luzVela10= new THREE.PointLight(0xffaa33, 2, 5, 2); 
-luzVela10.position.set(1, 4.35, -1.5); 
-scene.add(luzVela10);
-
-var luzVela11= new THREE.PointLight(0xffaa33, 2, 5, 2); 
-luzVela11.position.set(1, 4.35, 1.5); 
-scene.add(luzVela11);
-
-var luzVela12= new THREE.PointLight(0xffaa33, 2, 5, 2); 
-luzVela12.position.set(-1, 4.8, 6.9); 
-scene.add(luzVela12);
-
-//
-var luzVela13 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
-luzVela13.position.set(6.8, 0.55, 2.2); 
-scene.add(luzVela13);
-
-var luzVela14 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
-luzVela14.position.set(7.5, 0.55, 2.2); 
-scene.add(luzVela14);
-
-var luzVela15 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
-luzVela15.position.set(8.2, 0.55, 2.2); 
-scene.add(luzVela15);
-
-var luzVela16 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
-luzVela16.position.set(8.9, 0.55, 2.2); 
-scene.add(luzVela16);
-
-var luzVela17 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
-luzVela17.position.set(9.6, 0.55, 2.2); 
-scene.add(luzVela17);
-
-var luzVela18 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
-luzVela18.position.set(10.3, 0.55, 2.2); 
-scene.add(luzVela18);
-
-var luzVela19 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
-luzVela19.position.set(11.0, 0.55, 2.2); 
-scene.add(luzVela19);
-
-var luzVela20 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
-luzVela20.position.set(11.7, 0.55, 2.2); 
-scene.add(luzVela20);
-
-var luzVela21 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
-luzVela21.position.set(12.4, 0.55, 2.2); 
-scene.add(luzVela21);
-
-var luzVela22 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
-luzVela22.position.set(13.1, 0.55, 2.2); 
-scene.add(luzVela22);
-
-var luzVela23 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
-luzVela23.position.set(13.8, 0.55, 2.2); 
-scene.add(luzVela23);
-
-var luzVela24 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
-luzVela24.position.set(14.5, 0.55, 2.2); 
-scene.add(luzVela24);
-
-var luzVela25 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
-luzVela25.position.set(15.2, 0.55, 2.2); 
-scene.add(luzVela25);
-
-var luzVela26 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
-luzVela26.position.set(15.9, 0.55, 2.2); 
-scene.add(luzVela26);
-
-//
-var luzVela27 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
-luzVela27.position.set(6.8, 0.55, -2.2); 
-scene.add(luzVela27);
-
-var luzVela28 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
-luzVela28.position.set(7.5, 0.55, -2.2); 
-scene.add(luzVela28);
-
-var luzVela29 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
-luzVela29.position.set(8.2, 0.55, -2.2); 
-scene.add(luzVela29);
-
-var luzVela30 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
-luzVela30.position.set(8.9, 0.55, -2.2); 
-scene.add(luzVela30);
-
-var luzVela31 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
-luzVela31.position.set(9.6, 0.55, -2.2); 
-scene.add(luzVela31);
-
-var luzVela32 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
-luzVela32.position.set(10.3, 0.55, -2.2); 
-scene.add(luzVela32);
-
-var luzVela33 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
-luzVela33.position.set(11.0, 0.55, -2.2); 
-scene.add(luzVela33);
-
-var luzVela34 = new THREE.PointLight(0xffaa33, 2, 2, 1); 
-luzVela34.position.set(11.7, 0.55, -2.2); 
-scene.add(luzVela34);
-
-var luzVela35 = new THREE.PointLight(0xffaa33, 1, 2, 1); 
-luzVela35.position.set(12.4, 0.55, -2.2); 
-scene.add(luzVela35);
-
-var luzVela36 = new THREE.PointLight(0xffaa33, 1, 2, 1); 
-luzVela36.position.set(13.1, 0.55, -2.2); 
-scene.add(luzVela36);
-
-var luzVela37 = new THREE.PointLight(0xffaa33, 1, 2, 1); 
-luzVela37.position.set(13.8, 0.55, -2.2); 
-scene.add(luzVela37);
-
-var luzVela38 = new THREE.PointLight(0xffaa33, 1, 2, 1); 
-luzVela38.position.set(14.5, 0.55, -2.2); 
-scene.add(luzVela38);
-
-var luzVela39 = new THREE.PointLight(0xffaa33, 1, 2, 1); 
-luzVela39.position.set(15.2, 0.55, -2.2); 
-scene.add(luzVela39);
-
-var luzVela40 = new THREE.PointLight(0xffaa33, 1, 2, 1); 
-luzVela40.position.set(15.9, 0.55, -2.2); 
-scene.add(luzVela40);
-
-//
-var luzVela41= new THREE.PointLight(0xffaa33, 2, 5, 2); 
-luzVela41.position.set(-2.15,4.36,-2.5); 
-scene.add(luzVela41);
-
-var luzVela42= new THREE.PointLight(0xffaa33, 2, 5, 2); 
-luzVela42.position.set(-2.15,4.36,2.5); 
-scene.add(luzVela42);
-
-var luzVela43= new THREE.PointLight(0xffaa33, 2, 10, 2); 
-luzVela43.position.set(9.6,0.5,-8.55); 
-scene.add(luzVela43);
-
-var luzVela44= new THREE.PointLight(0xffaa33, 2, 10, 2); 
-luzVela44.position.set(9.6,0.5,8.55); 
-scene.add(luzVela44);
-
-var luzVela45= new THREE.PointLight(0xffaa33, 2, 10, 2); 
-luzVela45.position.set(-9.6,0.5,8.55); 
-scene.add(luzVela45);
-
-var luzVela46= new THREE.PointLight(0xffaa33, 2, 10, 2); 
-luzVela46.position.set(-9.6,0.5,-8.55); 
-scene.add(luzVela46);
-
-var luzVela47= new THREE.PointLight(0xffaa33, 2, 10, 2); 
-luzVela47.position.set(0,0.5,-8.55); 
-scene.add(luzVela47);
-
-var luzVela48= new THREE.PointLight(0xffaa33, 2, 10, 2); 
-luzVela48.position.set(0,0.5,8.55); 
-scene.add(luzVela48);
-
-var luzVela49= new THREE.PointLight(0xffaa33, 2, 10, 2); 
-luzVela49.position.set(-4.4,6.4,4.35); 
-scene.add(luzVela49);
-
-var luzVela50= new THREE.PointLight(0xffaa33, 2, 10, 2); 
-luzVela50.position.set(-4.4,6.4,-4.35); 
-scene.add(luzVela50);
-
-var luzVela51= new THREE.PointLight(0xffaa33, 2, 10, 2); 
-luzVela51.position.set(-9.6,0.5,0); 
-scene.add(luzVela51);
-
-var luzVela52= new THREE.PointLight(0xffaa33, 2, 10, 2); 
-luzVela52.position.set(-6.1,11.1,3.25); 
-scene.add(luzVela52);
-
-var luzVela53= new THREE.PointLight(0xffaa33, 2, 10, 2); 
-luzVela53.position.set(-6.1,11.1,-3.25); 
-scene.add(luzVela53);
-
-var luzVela54= new THREE.PointLight(0xffaa33, 2, 7, 2); 
-luzVela54.position.set(9,2,0); 
-scene.add(luzVela54);
-
-//ilumniar pasillo de velas
 var punto_luzsuelo = new THREE.SpotLight(0xffaa33,1,10,0.38,0.5,0);
 punto_luzsuelo.target.position.set(8,0,0);
 punto_luzsuelo.position.set(8, 10, 0);
@@ -361,7 +167,7 @@ scene.add(punto_luzsuelo2.target);
 scene.add(punto_luzsuelo2);
 if(!esMovil) punto_luzsuelo2.castShadow = true;
 
-//OBJETOS  ✏️✏️✏️✏️  🪶
+// --- OBJETOS ---
 var piso = new THREE.Mesh(
     new THREE.PlaneGeometry(50,50),
     new THREE.MeshLambertMaterial({color: 0x634646, side: THREE.DoubleSide})
@@ -370,18 +176,15 @@ scene.add(piso);
 piso.rotation.x = -Math.PI / 2;
 if(!esMovil) piso.receiveShadow = true;
 
-//base
 const Base = ESC0001({x:0,y:-2.2,z:0});
 Base.scale.set(0.186, 0.186, 0.186);
 Base.rotation.set(0, Math.PI / 2, 0);
 scene.add(Base);
 
-//alfombra
 const Alfombra = ESC005({x:0,y:-0.22,z:0});
 Alfombra.rotation.set(0, Math.PI / 2, 0);
 scene.add(Alfombra);
 
-//cuadros
 const Cuadro = ESC01({x:0.5,y:2.8,z:-5.2});
 Cuadro.rotation.set(0, Math.PI / 2.5, 0);
 Cuadro.scale.set(0.6, 0.6, 0.6);
@@ -417,7 +220,6 @@ Cuadro7.rotation.set(0, Math.PI / 2.5, 0);
 Cuadro7.scale.set(0.6, 0.6, 0.6);
 scene.add(Cuadro7);
 
-//papel picado
 const Papelpicado = ESC02({x:-6.3,y:8.9,z:0});
 Papelpicado.rotation.set(0,Math.PI / 2, 0);
 Papelpicado.scale.set(0.6, 0.6, 0.6);
@@ -483,7 +285,6 @@ Papelpicado13.rotation.set(0,Math.PI / 2, 0);
 Papelpicado13.scale.set(2.5, 2.5, 1.2);
 scene.add(Papelpicado13);
 
-//calaveritas
 const Calaverita = ESC04({x:1,y:2.8,z:-5.6});
 Calaverita.scale.set(0.4, 0.4, 0.4);
 Calaverita.rotation.set(0,Math.PI / -8, 0);
@@ -519,7 +320,6 @@ Calaverita7.scale.set(0.4, 0.4, 0.4);
 Calaverita7.rotation.set(0,Math.PI / -8, 0);
 scene.add(Calaverita7);
 
-//cajas
 const Cajamaderapequeña = ESC05({x:1.15,y:0,z:-5.8});
 Cajamaderapequeña.scale.set(2, 2, 2);
 scene.add(Cajamaderapequeña);
@@ -540,7 +340,6 @@ const Cajamaderagrande2 = ESC06({x:-2.1,y:0,z:5.8});
 Cajamaderagrande2.scale.set(2, 2, 2);
 scene.add(Cajamaderagrande2);
 
-//cigarros
 const Cigarros = ESC0005({x:-1.1,y:3.7,z:-1.3});
 Cigarros.scale.set(0.1, 0.1, 0.1);
 Cigarros.rotation.set(0, Math.PI / 2.5, 0);
@@ -551,7 +350,6 @@ Cigarros2.scale.set(0.08, 0.08, 0.08);
 Cigarros2.rotation.set(Math.PI / -2, 0, Math.PI / -1.2);
 scene.add(Cigarros2);
 
-//canastas
 const Canasta1 = ESC0008({x:2.5,y:2.77,z:1});
 Canasta1.scale.set(0.4, 0.4, 0.4);
 scene.add(Canasta1);
@@ -588,7 +386,6 @@ const Canasta9 = ESC0008({x:-0.76,y:3.65,z:0});
 Canasta9.scale.set(0.4, 0.4, 0.4);
 scene.add(Canasta9);
 
-//panes
 const Pan= ESC002({x:1.6,y:2.8,z:-5.1});
 Pan.scale.set(0.1, 0.1, 0.1);
 scene.add(Pan);
@@ -619,7 +416,6 @@ Pan7.scale.set(0.1, 0.1, 0.1);
 Pan7.rotation.set(Math.PI / -6, 0, 0);
 scene.add(Pan7);
 
-//cocas
 const Coca= ESC0002({x:4.5,y:2.63,z:-0.3});
 Coca.scale.set(0.2, 0.2, 0.2);
 scene.add(Coca);
@@ -636,7 +432,6 @@ const Coca4= ESC0002({x:1.5,y:2.75,z:-6.3});
 Coca4.scale.set(0.2, 0.2, 0.2);
 scene.add(Coca4);
 
-// copal
 const Copal= ESC0003({x:-1,y:3.72,z:2});
 Copal.scale.set(0.2, 0.2, 0.2);
 scene.add(Copal);
@@ -649,269 +444,203 @@ const Copal3= ESC0003({x:-2.48,y:5.38,z:-1});
 Copal3.scale.set(0.2, 0.2, 0.2);
 scene.add(Copal3);
 
-// flores de cempasúchil 
 const Flor1 = ESC0006({x:-4,y:6,z:-1.7});
 scene.add(Flor1);
-
 const Flor2 = ESC0007({x:-4,y:6,z:1.7});
 scene.add(Flor2);
-
 const Flor3 = ESC0007({x:-1.2,y:4.37,z:-6.2});
 Flor3.scale.set(0.02, 0.02, 0.02);
 scene.add(Flor3);
-
 const Flor4 = ESC0006({x:-2.1,y:4.37,z:-5.1});
 Flor4.scale.set(0.02, 0.02, 0.02);
 scene.add(Flor4);
-
 const Flor5 = ESC0006({x:0.9,y:2.87,z:-5});
 scene.add(Flor5);
-
 const Flor6 = ESC0007({x:2,y:2.87,z:-6});
 Flor6.scale.set(0.015, 0.015, 0.015);
 scene.add(Flor6);
-
 const Flor7 = ESC0006({x:0.9,y:2.87,z:5});
 Flor7.scale.set(0.015, 0.015, 0.015);
 scene.add(Flor7);
-
 const Flor8 = ESC0007({x:2.2,y:2.87,z:6});
 Flor8.scale.set(0.015, 0.015, 0.015);
 scene.add(Flor8);
-
 const Flor9 = ESC0007({x:-1.2,y:4.37,z:6.2});
 Flor9.scale.set(0.02, 0.02, 0.02);
 scene.add(Flor9);
-
 const Flor10 = ESC0006({x:-2.1,y:4.37,z:5.1});
 Flor10.scale.set(0.02, 0.02, 0.02);
 scene.add(Flor10);
-
 const Flor11 = ESC0006({x:-3.3,y:5.63,z:1.4});
 Flor11.scale.set(0.015, 0.015, 0.015);
 scene.add(Flor11);
-
 const Flor12 = ESC0006({x:-3.3,y:5.63,z:-1.4});
 Flor12.scale.set(0.015, 0.015, 0.015);
 scene.add(Flor12);
-
 const Flor13 = ESC0007({x:-3.3,y:5.63,z:0});
 Flor13.scale.set(0.015, 0.015, 0.015);
 scene.add(Flor13);
-
 const Flor14 = ESC0007({x:-1.5,y:3.96,z:-2.5});
 Flor14.scale.set(0.015, 0.015, 0.015);
 scene.add(Flor14);
-
 const Flor15 = ESC0006({x:-1.5,y:3.96,z:2.5});
 Flor15.scale.set(0.015, 0.015, 0.015);
 scene.add(Flor15);
-
 const Flor16 = ESC0007({x:0,y:3.92,z:2});
 Flor16.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor16);
-
 const Flor17 = ESC0006({x:0,y:3.92,z:-2});
 Flor17.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor17);
-
 const Flor18 = ESC0006({x:1,y:3.96,z:-2.5});
 Flor18.scale.set(0.015, 0.015, 0.015);
 scene.add(Flor18);
-
 const Flor19 = ESC0007({x:1,y:3.96,z:2.5});
 Flor19.scale.set(0.015, 0.015, 0.015);
 scene.add(Flor19);
-
 const Flor20 = ESC0007({x:2.2,y:3.05,z:2});
 Flor20.scale.set(0.012, 0.012, 0.012);
 scene.add(Flor20);
-
 const Flor21 = ESC0007({x:2.2,y:3.05,z:-2});
 Flor21.scale.set(0.012, 0.012, 0.012);
 scene.add(Flor21);
-
 const Flor22 = ESC0006({x:2.2,y:3.05,z:0});
 Flor22.scale.set(0.012, 0.012, 0.012);
 scene.add(Flor22);
-
 const Flor23 = ESC0006({x:4.3,y:2,z:-1.4});
 Flor23.scale.set(0.012, 0.012, 0.012);
 scene.add(Flor23);
-
 const Flor24 = ESC0007({x:5,y:2,z:-2.6});
 Flor24.scale.set(0.012, 0.012, 0.012);
 scene.add(Flor24);
-
 const Flor25 = ESC0006({x:4.3,y:2,z:1.4});
 Flor25.scale.set(0.012, 0.012, 0.012);
 scene.add(Flor25);
-
 const Flor26 = ESC0007({x:5,y:2,z:2.6});
 Flor26.scale.set(0.012, 0.012, 0.012);
 scene.add(Flor26);
-
 const Flor27 = ESC0007({x:2.7,y:2,z:2.6});
 Flor27.scale.set(0.012, 0.012, 0.012);
 scene.add(Flor27);
-
 const Flor28 = ESC0006({x:2.7,y:2,z:-2.6});
 Flor28.scale.set(0.012, 0.012, 0.012);
 scene.add(Flor28);
-
 const Flor29 = ESC0007({x:2.7,y:2,z:-1.5});
 Flor29.scale.set(0.012, 0.012, 0.012);
 scene.add(Flor29);
-
 const Flor30 = ESC0006({x:2.7,y:2,z:1.5});
 Flor30.scale.set(0.012, 0.012, 0.012);
 scene.add(Flor30);
-
 const Flor31 = ESC0007({x:2.7,y:2,z:0.4});
 Flor31.scale.set(0.012, 0.012, 0.012);
 scene.add(Flor31);
-
 const Flor32 = ESC0006({x:2.7,y:2,z:-0.4});
 Flor32.scale.set(0.012, 0.012, 0.012);
 scene.add(Flor32);
 
-//
 const Flor33 = ESC0007({x:6,y:1.23,z:-2.25});
 Flor33.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor33);
-
 const Flor34 = ESC0006({x:6,y:1.23,z:-2.9});
 Flor34.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor34);
-
 const Flor35 = ESC0007({x:6.2,y:1.23,z:-3.5});
 Flor35.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor35);
-
 const Flor36 = ESC0006({x:6.2,y:1.23,z:-4});
 Flor36.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor36);
-
 const Flor37 = ESC0006({x:5.55,y:1.21,z:-4.05});
 Flor37.scale.set(0.008, 0.008, 0.008);
 scene.add(Flor37);
-
 const Flor38 = ESC0007({x:4.8,y:1.23,z:-3.72});
 Flor38.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor38);
-
 const Flor39 = ESC0006({x:4,y:1.23,z:-3.72});
 Flor39.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor39);
-
 const Flor40 = ESC0007({x:3.2,y:1.23,z:-3.72});
 Flor40.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor40);
-
 const Flor41 = ESC0006({x:2.4,y:1.23,z:-3.72});
 Flor41.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor41);
-
 const Flor42 = ESC0007({x:1.6,y:1.23,z:-3.72});
 Flor42.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor42);
-
 const Flor43 = ESC0006({x:0.8,y:1.23,z:-3.72});
 Flor43.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor43);
-
 const Flor44 = ESC0007({x:0,y:1.23,z:-3.72});
 Flor44.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor44);
-
 const Flor45 = ESC0006({x:-0.8,y:1.23,z:-3.72});
 Flor45.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor45);
-
 const Flor46 = ESC0007({x:-1.6,y:1.23,z:-3.72});
 Flor46.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor46);
-
 const Flor47 = ESC0006({x:-2.4,y:1.23,z:-3.72});
 Flor47.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor47);
-
 const Flor48 = ESC0007({x:-3.2,y:1.23,z:-3.72});
 Flor48.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor48);
 
-//
 const Flor49 = ESC0007({x:6,y:1.23,z:2.25});
 Flor49.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor49);
-
 const Flor50 = ESC0006({x:6,y:1.23,z:2.9});
 Flor50.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor50);
-
 const Flor51 = ESC0007({x:6.2,y:1.23,z:3.5});
 Flor51.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor51);
-
 const Flor52 = ESC0006({x:6.2,y:1.23,z:4});
 Flor52.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor52);
-
 const Flor53 = ESC0006({x:5.55,y:1.21,z:4.05});
 Flor53.scale.set(0.008, 0.008, 0.008);
 scene.add(Flor53);
-
 const Flor54 = ESC0007({x:4.8,y:1.23,z:3.72});
 Flor54.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor54);
-
 const Flor55 = ESC0006({x:4,y:1.23,z:3.72});
 Flor55.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor55);
-
 const Flor56 = ESC0007({x:3.2,y:1.23,z:3.72});
 Flor56.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor56);
-
 const Flor57 = ESC0006({x:2.4,y:1.23,z:3.72});
 Flor57.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor57);
-
 const Flor58 = ESC0007({x:1.6,y:1.23,z:3.72});
 Flor58.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor58);
-
 const Flor59 = ESC0006({x:0.8,y:1.23,z:3.72});
 Flor59.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor59);
-
 const Flor60 = ESC0007({x:0,y:1.23,z:3.72});
-Flor60 .scale.set(0.01, 0.01, 0.01);
+Flor60.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor60);
-
 const Flor61 = ESC0006({x:-0.8,y:1.23,z:3.72});
 Flor61.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor61);
-
 const Flor62 = ESC0007({x:-1.6,y:1.23,z:3.72});
 Flor62.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor62);
-
 const Flor63 = ESC0006({x:-2.4,y:1.23,z:3.72});
 Flor63.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor63);
-
 const Flor64 = ESC0007({x:-3.2,y:1.23,z:3.72});
 Flor64.scale.set(0.01, 0.01, 0.01);
 scene.add(Flor64);
 
-//marco de flores
 const Flormarco = ESC0010({x:0,y:0.15,z:0});
 Flormarco.rotation.set(0, Math.PI / 2, 0);
 Flormarco.scale.set(0.95, 0.95, 0.95);
 scene.add(Flormarco);
 
-//velas
 const VelaJ = ESC0004({x:2.2,y:2.88,z:-6.8});
 VelaJ.scale.set(0.25, 0.25, 0.25);
 scene.add(VelaJ);
@@ -974,146 +703,17 @@ VelaH6.scale.set(0.1, 0.1, 0.1);
 VelaH6.rotation.set(0,Math.PI / -8, 0);
 scene.add(VelaH6);
 
-const VelaH7 = ESC001 ({x:6.8,y:0,z:2.2});
-VelaH7.scale.set(0.1, 0.1, 0.1);
-VelaH7.rotation.set(0,Math.PI / -8, 0);
-scene.add(VelaH7);
+for(let i = 6.8; i <= 15.9; i += 0.7) {
+    const v1 = ESC001({x: i, y: 0, z: 2.2});
+    v1.scale.set(0.1, 0.1, 0.1);
+    v1.rotation.set(0, Math.PI / -8, 0);
+    scene.add(v1);
 
-const VelaH8 = ESC001 ({x:7.5,y:0,z:2.2});
-VelaH8.scale.set(0.1, 0.1, 0.1);
-VelaH8.rotation.set(0,Math.PI / -8, 0);
-scene.add(VelaH8);
-
-const VelaH9 = ESC001 ({x:8.2,y:0,z:2.2});
-VelaH9.scale.set(0.1, 0.1, 0.1);
-VelaH9.rotation.set(0,Math.PI / -8, 0);
-scene.add(VelaH9);
-
-const VelaH10 = ESC001 ({x:8.9,y:0,z:2.2});
-VelaH10.scale.set(0.1, 0.1, 0.1);
-VelaH10.rotation.set(0,Math.PI / -8, 0);
-scene.add(VelaH10);
-
-const VelaH11 = ESC001 ({x:9.6,y:0,z:2.2});
-VelaH11.scale.set(0.1, 0.1, 0.1);
-VelaH11.rotation.set(0,Math.PI / -8, 0);
-scene.add(VelaH11);
-
-const VelaH12 = ESC001 ({x:10.3,y:0,z:2.2});
-VelaH12.scale.set(0.1, 0.1, 0.1);
-VelaH12.rotation.set(0,Math.PI / -8, 0);
-scene.add(VelaH12);
-
-const VelaH13 = ESC001 ({x:11.0,y:0,z:2.2});
-VelaH13.scale.set(0.1, 0.1, 0.1);
-VelaH13.rotation.set(0,Math.PI / -8, 0);
-scene.add(VelaH13);
-
-const VelaH14 = ESC001 ({x:11.7,y:0,z:2.2});
-VelaH14.scale.set(0.1, 0.1, 0.1);
-VelaH14.rotation.set(0,Math.PI / -8, 0);
-scene.add(VelaH14);
-
-const VelaH15 = ESC001 ({x:12.4,y:0,z:2.2});
-VelaH15.scale.set(0.1, 0.1, 0.1);
-VelaH15.rotation.set(0,Math.PI / -8, 0);
-scene.add(VelaH15);
-
-const VelaH16 = ESC001 ({x:13.1,y:0,z:2.2});
-VelaH16.scale.set(0.1, 0.1, 0.1);
-VelaH16.rotation.set(0,Math.PI / -8, 0);
-scene.add(VelaH16);
-
-const VelaH17 = ESC001 ({x:13.8,y:0,z:2.2});
-VelaH17.scale.set(0.1, 0.1, 0.1);
-VelaH17.rotation.set(0,Math.PI / -8, 0);
-scene.add(VelaH17);
-
-const VelaH18 = ESC001 ({x:14.5,y:0,z:2.2});
-VelaH18.scale.set(0.1, 0.1, 0.1);
-VelaH18.rotation.set(0,Math.PI / -8, 0);
-scene.add(VelaH18);
-
-const VelaH19 = ESC001 ({x:15.2,y:0,z:2.2});
-VelaH19.scale.set(0.1, 0.1, 0.1);
-VelaH19.rotation.set(0,Math.PI / -8, 0);
-scene.add(VelaH19);
-
-const VelaH20 = ESC001 ({x:15.9,y:0,z:2.2});
-VelaH20.scale.set(0.1, 0.1, 0.1);
-VelaH20.rotation.set(0,Math.PI / -8, 0);
-scene.add(VelaH20);
-
-//
-const VelaH21 = ESC001 ({x:6.8,y:0,z:-2.2});
-VelaH21.scale.set(0.1, 0.1, 0.1);
-VelaH21.rotation.set(0,Math.PI / -8, 0);
-scene.add(VelaH21);
-
-const VelaH22 = ESC001 ({x:7.5,y:0,z:-2.2});
-VelaH22.scale.set(0.1, 0.1, 0.1);
-VelaH22.rotation.set(0,Math.PI / -8, 0);
-scene.add(VelaH22);
-
-const VelaH23 = ESC001 ({x:8.2,y:0,z:-2.2});
-VelaH23.scale.set(0.1, 0.1, 0.1);
-VelaH23.rotation.set(0,Math.PI / -8, 0);
-scene.add(VelaH23);
-
-const VelaH24 = ESC001 ({x:8.9,y:0,z:-2.2});
-VelaH24.scale.set(0.1, 0.1, 0.1);
-VelaH24.rotation.set(0,Math.PI / -8, 0);
-scene.add(VelaH24);
-
-const VelaH25 = ESC001 ({x:9.6,y:0,z:-2.2});
-VelaH25.scale.set(0.1, 0.1, 0.1);
-VelaH25.rotation.set(0,Math.PI / -8, 0);
-scene.add(VelaH25);
-
-const VelaH26 = ESC001 ({x:10.3,y:0,z:-2.2});
-VelaH26.scale.set(0.1, 0.1, 0.1);
-VelaH26.rotation.set(0,Math.PI / -8, 0);
-scene.add(VelaH26);
-
-const VelaH27 = ESC001 ({x:11.0,y:0,z:-2.2});
-VelaH27.scale.set(0.1, 0.1, 0.1);
-VelaH27.rotation.set(0,Math.PI / -8, 0);
-scene.add(VelaH27);
-
-const VelaH28 = ESC001 ({x:11.7,y:0,z:-2.2});
-VelaH28.scale.set(0.1, 0.1, 0.1);
-VelaH28.rotation.set(0,Math.PI / -8, 0);
-scene.add(VelaH28);
-
-const VelaH29 = ESC001 ({x:12.4,y:0,z:-2.2});
-VelaH29.scale.set(0.1, 0.1, 0.1);
-VelaH29.rotation.set(0,Math.PI / -8, 0);
-scene.add(VelaH29);
-
-const VelaH30 = ESC001 ({x:13.1,y:0,z:-2.2});
-VelaH30.scale.set(0.1, 0.1, 0.1);
-VelaH30.rotation.set(0,Math.PI / -8, 0);
-scene.add(VelaH30);
-
-const VelaH31 = ESC001 ({x:13.8,y:0,z:-2.2});
-VelaH31.scale.set(0.1, 0.1, 0.1);
-VelaH31.rotation.set(0,Math.PI / -8, 0);
-scene.add(VelaH31);
-
-const VelaH32 = ESC001 ({x:14.5,y:0,z:-2.2});
-VelaH32.scale.set(0.1, 0.1, 0.1);
-VelaH32.rotation.set(0,Math.PI / -8, 0);
-scene.add(VelaH32);
-
-const VelaH33 = ESC001 ({x:15.2,y:0,z:-2.2});
-VelaH33.scale.set(0.1, 0.1, 0.1);
-VelaH33.rotation.set(0,Math.PI / -8, 0);
-scene.add(VelaH33);
-
-const VelaH34 = ESC001 ({x:15.9,y:0,z:-2.2});
-VelaH34 .scale.set(0.1, 0.1, 0.1);
-VelaH34 .rotation.set(0,Math.PI / -8, 0);
-scene.add(VelaH34 );
+    const v2 = ESC001({x: i, y: 0, z: -2.2});
+    v2.scale.set(0.1, 0.1, 0.1);
+    v2.rotation.set(0, Math.PI / -8, 0);
+    scene.add(v2);
+}
 
 const VelaJ9 = ESC0004 ({x:9.6,y:0.05,z:8.55});
 VelaJ9.scale.set(0.15, 0.15, 0.15);
@@ -1160,7 +760,6 @@ VelaJ17.scale.set(0.15, 0.15, 0.15);
 VelaJ17.rotation.set(0,Math.PI / -8, 0);
 scene.add(VelaJ17);
 
-//tarros
 const Tarro = ESC003({x:1.5,y:2.7,z:6});
 Tarro.scale.set(0.1, 0.1, 0.1);
 Tarro.rotation.set(0, (-130 / 180) * Math.PI, 0);
@@ -1171,7 +770,6 @@ Tarro2.scale.set(0.1, 0.1, 0.1);
 Tarro2.rotation.set(0, Math.PI / 1, 0);
 scene.add(Tarro2);
 
-//florero 
 const Florero = ESC03({x:-4.4,y:5.95,z:2.8});
 Florero.scale.set(0.4, 0.4, 0.4);
 Florero.rotation.set(0, (-130 / 180) * Math.PI, 0);
@@ -1217,7 +815,6 @@ FloreroH4.scale.set(0.15, 0.15, 0.15);
 FloreroH4.rotation.set(0, (-130 / 180) * Math.PI, 0);
 scene.add(FloreroH4);
 
-//mike
 const mike1 = ESC00011 ({x:-5.3,y:6.95,z:-3.24});
 mike1.scale.set(0.05, 0.05, 0.05);
 mike1.rotation.set(0,Math.PI / 2, 0);
@@ -1228,17 +825,13 @@ mike2.scale.set(0.05, 0.05, 0.05);
 mike2.rotation.set(0,Math.PI / 2, 0);
 scene.add(mike2);
 
-//🎰🎰Rendering y animación
 let ultimoFrame = 0;
 const intervalo = esMovil ? 1000 / 30 : 1000 / 60;
 
 function render(tiempo) {
     requestAnimationFrame(render);
-
     if (tiempo - ultimoFrame < intervalo) return;
-
     ultimoFrame = tiempo;
-
     controls.update();
     renderer.render(scene, camera);
 }
